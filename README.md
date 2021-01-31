@@ -1,6 +1,13 @@
 # xccodecov
 xccodecov — Report code coverage with *.xcresult
 
+## Installing
+[MINT](https://github.com/yonaskolb/Mint)
+
+```
+$ mint install mnkd/xccodecov
+```
+
 ## Build
 ```
 $ make
