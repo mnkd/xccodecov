@@ -7,6 +7,9 @@ let package = Package(
     platforms: [
         .macOS(.v10_15)
     ],
+    products: [
+        .executable(name: "xccodecov", targets: ["xccodecov"])
+    ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.2"),
         .package(url: "https://github.com/davidahouse/XCResultKit", from: "0.7.1"),
