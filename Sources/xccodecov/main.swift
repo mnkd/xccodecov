@@ -22,8 +22,8 @@ struct XCCodeCov: ParsableCommand {
     @Argument(help: "/path/to/*.xcresult")
     var path: String
 
-    @Option(name: .shortAndLong, help: "project name")
-    var projectName: String
+    @Option(name: .shortAndLong, help: "target prefix")
+    var targetPrefix: String
 
     @Option(name: .shortAndLong, help: "path to configration file")
     var configPath: String?
@@ -42,7 +42,7 @@ struct XCCodeCov: ParsableCommand {
         let config = Configration(path: configPath ?? "") ?? .default
 
         Reporter(
-            projectName: projectName,
+            targetPrefix: targetPrefix,
             xcresultPath: xcresultPath,
             config: config,
             zeroCoverageFiles: zeroCoverageFiles

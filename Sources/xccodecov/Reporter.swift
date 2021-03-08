@@ -10,7 +10,7 @@ import Foundation
 import XCResultKit
 
 struct Reporter {
-    let projectName: String
+    let targetPrefix: String
     let xcresultPath: XCResultPath
     let config: Configration
     let zeroCoverageFiles: Bool
@@ -35,13 +35,22 @@ struct Reporter {
     }
 
     private func statsTarget(_ target: CodeCoverageTarget) {
+        guard target.name.hasPrefix(targetPrefix) else {
+            print("Ignore target: \(target.name)")
+            return
+        }
+
+        print("")
+        print("Target: \(target.name)")
+
         if zeroCoverageFiles {
             let files = target.files.filter { $0.coveredLines == 0 }
             statsAllFiles(files)
         } else {
             statsCategory(target)
-            statsFileSuffix("ViewModel.swift", target: target)
-            statsFileSuffix("ViewController.swift", target: target)
+
+            //statsFileSuffix("ViewModel.swift", target: target)
+            //statsFileSuffix("ViewController.swift", target: target)
 
             let files = target.files.filter { $0.coveredLines > 0 }
             statsAllFiles(files)
@@ -59,7 +68,7 @@ struct Reporter {
     }
 
     private func statsCategory(_ target: CodeCoverageTarget) {
-        let stats = Stats(target: target, projectPath: "\(xcresultPath.repoPath)/\(projectName)")
+        let stats = Stats(target: target, projectPath: "\(xcresultPath.repoPath)/\(targetPrefix)")
         let categories = config.categories ?? []
         guard !categories.isEmpty else { return }
 
@@ -93,11 +102,11 @@ struct Reporter {
             let percent = $0.lineCoverage.toPercent.leftPadding(toLength: 4, withPad: " ")
             print("\(path) \(percent)")
         }
+        print("")
     }
 
     private func statsFile(_ file: CodeCoverageFile) -> (path: String, lineCoverage: Double) {
-        var path = file.path.replacingOccurrences(of: xcresultPath.repoPath, with: "")
-        path = path.replacingOccurrences(of: "/\(projectName)", with: "")
+        let path = file.path.replacingOccurrences(of: xcresultPath.repoPath, with: "")
         return (path, file.lineCoverage)
     }
 }
